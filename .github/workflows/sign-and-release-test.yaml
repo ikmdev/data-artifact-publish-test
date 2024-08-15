@@ -36,6 +36,7 @@ jobs:
                 -Dclassifier=pb \
                 -Durl="https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/" \
                 -DrepositoryId=ossrh \
+                -Dgpg.passphrase=${{secrets.GPG_PASSPHRASE}} \
                 -Dpinentry-mode \
                 -Dloopback \
                 -Dyes \
