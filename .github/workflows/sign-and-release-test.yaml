@@ -1,0 +1,72 @@
+name: GPG Release Test
+
+run-name: "Releasing ${{ github.event.repository.name }} #${{github.run_number}}"
+
+# Trigger workflow manually
+on:
+  workflow_dispatch:
+
+env:
+  BRANCH_NAME: ${{github.ref_name}}
+  TRUNK_BRANCH_NAME: 'main'
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-24.04
+    outputs:
+      NEXT_SNAPSHOT_VERSION: ${{steps.nextSnapshotVersion.outputs.SnapshotVersion}}
+      RELEASE_VERSION: ${{steps.splitCurrentVersion.outputs._0}}
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
+          gpg-private-key: ${{ inputs.gpg_key }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Verify Branch
+        if: env.BRANCH_NAME != env.TRUNK_BRANCH_NAME
+        run: |
+          echo "ERROR: Attempting to release from branch ${{env.BRANCH_NAME}}. Release from ${{env.TRUNK_BRANCH_NAME}} branch only"
+          exit 1
+
+      - name: Build IKMDEV Code
+        uses: ikmdev/maven-release-action@main
+        with:
+          branch_name: ${{env.BRANCH_NAME}}
+          ikmdevops_pat: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          next_snapshot_version: ${{steps.nextSnapshotVersion.outputs.SnapshotVersion}}
+          release_version: ${{steps.splitCurrentVersion.outputs._0}}
+          ossrh_username: ${{secrets.OSSRH_TOKEN_USER}}
+          ossrh_token: ${{secrets.OSSRH_TOKEN_PASS}}
+          gpg_key: ${{secrets.GPG_KEY}}
+          gpg_passphrase: ${{secrets.GPG_PASSPHRASE}}
+
+      - name: Publish To OSSRH (Maven Central Staging)
+        shell: bash
+        run: |
+            ./mvnw deploy \
+                --batch-mode \
+                -e \
+                -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+                -DskipTests \
+                -DskipITs \
+                -Dmaven.main.skip \
+                -Dmaven.test.skip \
+                -DrepositoryId=ossrh \
+                -DrepositoryIdOSSRH='true' \
+                -PstageOSSRH
+        env:
+          MAVEN_USERNAME: ${{ inputs.ossrh_username }}
+          MAVEN_CENTRAL_TOKEN: ${{ inputs.ossrh_token }}
+          MAVEN_GPG_PASSPHRASE: ${{ inputs.gpg_passphrase }}
