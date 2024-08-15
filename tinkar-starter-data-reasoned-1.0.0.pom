@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>dev.ikm.tinkar.data</groupId>
+    <artifactId>tinkar-starter-data-reasoned</artifactId>
+    <version>1.0.0</version>
+    <packaging>zip</packaging>
+    <name>Tinkar Starter Data Reasoned</name>
+    <description>
+        Tinkar Starter Data Reasoned is a protocol buffers representation of the processed data required to support Tinkar-Core functionalities and the Komet application.
+        Tinkar and its underlining data model serves as a self-describing terminology model that can be used to harmonize other standards based models.
+    </description>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+    <scm>
+        <url>http://www.github.com/ikmdev/tinkar-data</url>
+    </scm>
+    <developers>
+        <developer>
+            <id>ikmdev</id>
+            <name>IKM Development Team</name>
+            <email>support@ikm.dev</email>
+        </developer>
+    </developers>
+    <url>http://www.ikm.dev</url>
+    <organization>
+        <name>Integrated Knowledge Management</name>
+        <url>http://www.ikm.dev</url>
+    </organization>
+</project>
