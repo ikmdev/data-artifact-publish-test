@@ -28,17 +28,18 @@ jobs:
 
       - name: Publish To OSSRH (Maven Central Staging)
         run: |
-            ./mvnw deploy \
+            mvn org.apache.maven.plugins:maven-gpg-plugin:3.2.4:sign-and-deploy-file \
                 --batch-mode \
                 -e \
-                -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
-                -DskipTests \
-                -DskipITs \
-                -Dmaven.main.skip \
-                -Dmaven.test.skip \
+                -Dfile=./tinkar-starter-data-reasoned-1.0.0-pb.zip \
+                -DpomFile=./tinkar-starter-data-reasoned-1.0.0.pom \
+                -Dclassifier=pb \
+                -Durl="https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/" \
                 -DrepositoryId=ossrh \
-                -DrepositoryIdOSSRH='true' \
-                -PstageOSSRH
+                -Dpinentry-mode \
+                -Dloopback \
+                -Dyes \
+                -Dverbose
         env:
           MAVEN_USERNAME: ${{secrets.OSSRH_TOKEN_USER}}
           MAVEN_CENTRAL_TOKEN: ${{secrets.OSSRH_TOKEN_PASS}}
