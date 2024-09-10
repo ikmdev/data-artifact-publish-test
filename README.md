@@ -8,3 +8,8 @@ tinkar-core.
 ### Team Ownership - Product Owner
 
 Architecture Team
+
+## Issues and Contributions
+Technical and non-technical issues can be reported to the [Issue Tracker](https://github.com/ikmdev/tinkar-starter-reasoned/issues).
+
+Contributions can be submitted via pull requests. Please check the [contribution guide](doc/how-to-contribute.md) for more details.
